@@ -3,6 +3,7 @@ const inquirer = require('inquirer')
 require('console.table')
 
 const db = require('./db/connection')
+const connection = require('./db/connection')
 start()
 function start() {
   inquirer.prompt([
@@ -17,9 +18,9 @@ function start() {
         "Add a new department",
         "Add a new role",
         "Add a new employee",
-        "Remove an employee",
-        "Remove a role",
         "Remove a department",
+        "Remove a role",
+        "Remove an employee",
         "Update employee roles",
         "View the total utilized budget of a department",
         "Exit"
@@ -45,14 +46,15 @@ function start() {
         case "Add a new employee":
           addEmployee();
           break;
-        case "Remove an employee":
-          removeEmployee();
+        case "Remove a department":
+          removeDepartment();
           break;
+
         case "Remove a role":
           removeRole();
           break;
-        case "Remove a department":
-          removeDepartment();
+        case "Remove an employee":
+          removeEmployee();
           break;
         case "Update employee roles":
           selectEmp();
@@ -64,14 +66,13 @@ function start() {
     });
 };
 
-function viewEmployees() {
-  db.query('SELECT * FROM employees', function (err, res) {
+function viewDepartments() {
+  db.query('SELECT * FROM department', function (err, res) {
     if (err) throw err;
     console.table(res)
     start()
   })
 }
-
 function viewRoles() {
   db.query('SELECT * FROM roles', function (err, res) {
     if (err) throw err;
@@ -79,9 +80,8 @@ function viewRoles() {
     start()
   })
 }
-
-function viewDepartments() {
-  db.query('SELECT * FROM department', function (err, res) {
+function viewEmployees() {
+  db.query('SELECT * FROM employees', function (err, res) {
     if (err) throw err;
     console.table(res)
     start()
@@ -105,34 +105,104 @@ function addDepartment() {
   }
   )
 }
-
-function addRole() {
-  inquirer.prompt([
-    {
-      name: 'title',
-      message: 'Name of role you wish to add:'
-    },
-    {
-      name: 'salary',
-      message: 'Salary for role:'
-    },
-    {
-      name: 'departmentId',
-      message: 'Department ID:',
-      type: 'list',
-      choices: res.map(item => item.name)
-    }
-  ]).then(function (answers) {
-    const selectedDept = res.find(dept => dept.name === answers.departmentId)
-    db.query('INSERT INTO roles SET ?', {
+const addRole = () => {
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'title',
+        message: 'Name of role you wish to add:'
+      },
+      {
+        type: 'number',
+        name: 'salary',
+        message: 'Salary for role:'
+      },
+      {
+        type: 'list',
+        name: 'departmentId',
+        message: 'Department ID:',
+        choices: departments.map(department => ({
+          name: `${department.name}`}))
+      }
+    ])
+      .then(function (answers) => {
+  db.query('INSERT INTO roles SET ?', {
       title: answers.title,
       salary: answers.salary,
-      departmentId: answers.selectedDept
-    }, function (err, res) {
-      if (err) throw err;
-      console.table(res)
-      start()
-    })
-  }
-  )
+      departmentId: answers.departmentID
+    }, err => {
+          if (err) throw err;
+          console.log('role added')
+          start()
+        })
+      })
+  })
 }
+
+
+
+
+
+
+// function addEmployee() {
+//   inquirer.prompt([
+//     {
+//       name: 'firstName',
+//       message: 'First Name:'
+//     },
+//     {
+//       name: 'lastName',
+//       message: 'Last Name:'
+//     },
+//     {
+//       name: 'roleId',
+//       message: 'Role ID:',
+//       type: 'list',
+//       choices: res.map(item => item.name)
+//     }
+//   ]).then(function (answers) {
+//     const selectedRole = res.find(role => role.name === answers.roleId)
+//     db.query('INSERT INTO employees SET ?', {
+//       title: answers.title,
+//       salary: answers.salary,
+//       roleId: answers.selectedRole
+//     }, function (err, res) {
+//       if (err) throw err;
+//       console.table(res)
+//       start()
+//     })
+//   }
+//   )
+// }
+
+
+
+
+
+
+
+// function removeEmployee() {
+//   connection.query("SELECT * FROM employees", function (err, res) {
+//     if (err) throw err;
+//     inquirer.prompt([
+//       {
+//         type: "rawlist",
+//         name: "removeEmp",
+//         message: "Select the employee who will be removed",
+//         choices: res.map(emp => emp.id && emp.first_name)
+//       }
+//     ]).then(function (answer) {
+//       const selectedEmp = res.find(emp => emp.id && emp.first_name === answer.removeEmp);
+//       connection.query("DELETE FROM employees WHERE ?",
+//         [{
+//           id: selectedEmp.id
+//         }],
+//         function (err, res) {
+//           if (err) throw err;
+//           console.log("Employee Removed");
+//           start();
+//         }
+//       );
+//     });
+//   })
+// };
