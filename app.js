@@ -99,21 +99,21 @@ function addDepartment() {
       name: answer.addDepartment
     }, function (err, res) {
       if (err) throw err;
-        console.table(res)
-        start()
+      console.table(res)
+      start()
     })
   }
   )
 }
 
-addRole() {
+function addRole() {
   inquirer.prompt([
     {
       name: 'title',
       message: 'Name of role you wish to add:'
     },
     {
-      name: 'salary'
+      name: 'salary',
       message: 'Salary for role:'
     },
     {
@@ -123,7 +123,7 @@ addRole() {
       choices: res.map(item => item.name)
     }
   ]).then(function (answers) {
-    const selectedDept = res.find(dept=> dept.name === answers.departmentId)
+    const selectedDept = res.find(dept => dept.name === answers.departmentId)
     db.query('INSERT INTO roles SET ?', {
       title: answers.title,
       salary: answers.salary,
