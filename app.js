@@ -105,7 +105,48 @@ function addDepartment() {
   }
   )
 }
+// const addRole = () => {
+//   db.query('SELECT * FROM departments', (err, departments) => {
+//     if (err) {
+//       console.log(err)
+//     }
+//   })
+//   inquirer.prompt([
+//     {
+//       type: 'input',
+//       name: 'title',
+//       message: 'Name of role you wish to add:'
+//     },
+//     {
+//       type: 'number',
+//       name: 'salary',
+//       message: 'Salary for role:'
+//     },
+//     {
+//       type: 'list',
+//       name: 'departmentId',
+//       message: 'Department ID:',
+//       choices: departments.map(department => ({
+//         name: `${department.name}`
+//       }))
+//     }
+//   ]).then(function (answers) {
+//     db.query('INSERT INTO roles SET ?', {
+//       title: answers.title,
+//       salary: answers.salary,
+//       departmentId: answers.departmentId
+//     }, function (err, res) {
+//       if (err) throw err;
+//       console.table(res)
+//       start()
+//     })
+//   })
+// }
+
+
 const addRole = () => {
+  db.query('SELECT * FROM departments', (err, departments) => {
+    if (err) { console.log(err) }
     inquirer.prompt([
       {
         type: 'input',
@@ -122,24 +163,23 @@ const addRole = () => {
         name: 'departmentId',
         message: 'Department ID:',
         choices: departments.map(department => ({
-          name: `${department.name}`}))
+          name: `${department.name}`,
+          value: department.id
+        }))
       }
-    ])
-      .then(function (answers) => {
-  db.query('INSERT INTO roles SET ?', {
-      title: answers.title,
-      salary: answers.salary,
-      departmentId: answers.departmentID
-    }, err => {
-          if (err) throw err;
-          console.log('role added')
-          start()
-        })
+    ]).then(function (answers) {
+      db.query('INSERT INTO roles SET ?', {
+        title: answers.title,
+        salary: answers.salary,
+        departmentId: answers.departmentId
+      }, function (err, res) {
+        if (err) throw err;
+        console.table(res)
+        start()
       })
+    })
   })
 }
-
-
 
 
 
