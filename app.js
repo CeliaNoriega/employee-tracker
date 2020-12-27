@@ -57,7 +57,7 @@ function start() {
           removeEmployee();
           break;
         case "Update employee roles":
-          selectEmp();
+          updateEmpRole();
           break;
         case "exit":
           connection.end();
