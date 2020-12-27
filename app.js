@@ -204,7 +204,7 @@ function removeDepartment() {
       db.query(`DELETE FROM departments WHERE id = ${answer.removeDep}`
       , function (err, res) {
         if (err) throw err
-        console.log("Department Removed")
+        console.log('Department removed!')
         start()
       })
     })
