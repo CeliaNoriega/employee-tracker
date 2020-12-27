@@ -256,3 +256,5 @@ function removeEmployee() {
     })
   })
 }
+
+//update employee role function
