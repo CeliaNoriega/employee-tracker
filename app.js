@@ -164,7 +164,7 @@ const addEmployee = () => {
         name: 'roleId',
         message: 'Role ID:',
         choices: roles.map(role => ({
-          name: `${role.name}`,
+          name: `${role.title}`,
           value: role.id
         }))
       }
@@ -207,6 +207,29 @@ function removeDepartment() {
         console.log('Department removed!')
         start()
       })
+    })
+  })
+}
+function removeRole() {
+  db.query('SELECT * FROM roles', (err, roles) => {
+    if (err) { console.log(err) }
+    inquirer.prompt([
+      {
+        type: "list",
+        name: "removeRole",
+        message: "Select the role which will be removed",
+        choices: roles.map(role => ({
+          name: `${role.title}`,
+          value: role.id
+        }))
+      }
+    ]).then(function (answer) {
+      db.query(`DELETE FROM roles WHERE id = ${answer.removeRole}`
+        , function (err, res) {
+          if (err) throw err
+          console.log('Role removed!')
+          start()
+        })
     })
   })
 }
