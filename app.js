@@ -66,9 +66,10 @@ function start() {
     });
 };
 
+
 //View Functions
 function viewDepartments() {
-  db.query('SELECT * FROM department', function (err, res) {
+  db.query('SELECT * FROM departments', function (err, res) {
     if (err) throw err;
     console.table(res)
     start()
@@ -88,6 +89,7 @@ function viewEmployees() {
     start()
   })
 }
+
 
 //Add Functions
 function addDepartment() {
@@ -166,11 +168,13 @@ const addEmployee = () => {
           value: role.id
         }))
       }
+      //need to work out how to make managerId optional
     ]).then(function (answers) {
       db.query('INSERT INTO employees SET ?', {
         firstName: answers.firstName,
         lastName: answers.lastName,
         roleId: answers.roleId,
+        //managerId null for now
         managerId: null
       }, function (err, res) {
         if (err) throw err;
@@ -181,6 +185,31 @@ const addEmployee = () => {
   })
 }
 
+
+//Remove functions
+function removeDepartment() {
+  db.query('SELECT * FROM departments', (err, departments) => {
+    if (err) { console.log(err) }
+    inquirer.prompt([
+      {
+        type: "list",
+        name: "removeDep",
+        message: "Select the department which will be removed",
+        choices: departments.map(department => ({
+          name: `${department.name}`,
+          value: department.id
+        }))
+      }
+    ]).then(function (answer) {
+      db.query(`DELETE FROM departments WHERE id = ${answer.removeDep}`
+      , function (err, res) {
+        if (err) throw err
+        console.log("Department Removed")
+        start()
+      })
+    })
+  })
+}
 
 
 
