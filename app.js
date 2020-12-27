@@ -233,33 +233,26 @@ function removeRole() {
     })
   })
 }
-
-
-
-
-
-// function removeEmployee() {
-//   connection.query("SELECT * FROM employees", function (err, res) {
-//     if (err) throw err;
-//     inquirer.prompt([
-//       {
-//         type: "rawlist",
-//         name: "removeEmp",
-//         message: "Select the employee who will be removed",
-//         choices: res.map(emp => emp.id && emp.first_name)
-//       }
-//     ]).then(function (answer) {
-//       const selectedEmp = res.find(emp => emp.id && emp.first_name === answer.removeEmp);
-//       connection.query("DELETE FROM employees WHERE ?",
-//         [{
-//           id: selectedEmp.id
-//         }],
-//         function (err, res) {
-//           if (err) throw err;
-//           console.log("Employee Removed");
-//           start();
-//         }
-//       );
-//     });
-//   })
-// };
+function removeEmployee() {
+  db.query('SELECT * FROM employees', (err, employees) => {
+    if (err) { console.log(err) }
+    inquirer.prompt([
+      {
+        type: "list",
+        name: "removeEmp",
+        message: "Select the employee which will be removed",
+        choices: employees.map(employee => ({
+          name: `${employee.firstName} ${employee.lastName}`,
+          value: employee.id
+        }))
+      }
+    ]).then(function (answer) {
+      db.query(`DELETE FROM employees WHERE id = ${answer.removeEmp}`
+        , function (err, res) {
+          if (err) throw err
+          console.log('Employee removed!')
+          start()
+        })
+    })
+  })
+}
