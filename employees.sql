@@ -19,7 +19,7 @@ CREATE TABLE employees (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     firstName VARCHAR(30) NOT NULL,
     lastName VARCHAR(30) NOT NULL,
-    RoleId INT UNSIGNED NOT NULL,
+    roleId INT UNSIGNED NOT NULL,
     managerId INT UNSIGNED,
     FOREIGN KEY(roleId) REFERENCES roles(id),
     FOREIGN KEY(managerId) REFERENCES employees(id)

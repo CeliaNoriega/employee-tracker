@@ -66,6 +66,7 @@ function start() {
     });
 };
 
+//View Functions
 function viewDepartments() {
   db.query('SELECT * FROM department', function (err, res) {
     if (err) throw err;
@@ -88,6 +89,7 @@ function viewEmployees() {
   })
 }
 
+//Add Functions
 function addDepartment() {
   inquirer.prompt([
     {
@@ -105,45 +107,6 @@ function addDepartment() {
   }
   )
 }
-// const addRole = () => {
-//   db.query('SELECT * FROM departments', (err, departments) => {
-//     if (err) {
-//       console.log(err)
-//     }
-//   })
-//   inquirer.prompt([
-//     {
-//       type: 'input',
-//       name: 'title',
-//       message: 'Name of role you wish to add:'
-//     },
-//     {
-//       type: 'number',
-//       name: 'salary',
-//       message: 'Salary for role:'
-//     },
-//     {
-//       type: 'list',
-//       name: 'departmentId',
-//       message: 'Department ID:',
-//       choices: departments.map(department => ({
-//         name: `${department.name}`
-//       }))
-//     }
-//   ]).then(function (answers) {
-//     db.query('INSERT INTO roles SET ?', {
-//       title: answers.title,
-//       salary: answers.salary,
-//       departmentId: answers.departmentId
-//     }, function (err, res) {
-//       if (err) throw err;
-//       console.table(res)
-//       start()
-//     })
-//   })
-// }
-
-
 const addRole = () => {
   db.query('SELECT * FROM departments', (err, departments) => {
     if (err) { console.log(err) }
@@ -180,41 +143,43 @@ const addRole = () => {
     })
   })
 }
-
-
-
-
-// function addEmployee() {
-//   inquirer.prompt([
-//     {
-//       name: 'firstName',
-//       message: 'First Name:'
-//     },
-//     {
-//       name: 'lastName',
-//       message: 'Last Name:'
-//     },
-//     {
-//       name: 'roleId',
-//       message: 'Role ID:',
-//       type: 'list',
-//       choices: res.map(item => item.name)
-//     }
-//   ]).then(function (answers) {
-//     const selectedRole = res.find(role => role.name === answers.roleId)
-//     db.query('INSERT INTO employees SET ?', {
-//       title: answers.title,
-//       salary: answers.salary,
-//       roleId: answers.selectedRole
-//     }, function (err, res) {
-//       if (err) throw err;
-//       console.table(res)
-//       start()
-//     })
-//   }
-//   )
-// }
-
+const addEmployee = () => {
+  db.query('SELECT * FROM roles', (err, roles) => {
+    if (err) { console.log(err) }
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'firstName',
+        message: 'First Name:'
+      },
+      {
+        type: 'input',
+        name: 'lastName',
+        message: 'Last Name:'
+      },
+      {
+        type: 'list',
+        name: 'roleId',
+        message: 'Role ID:',
+        choices: roles.map(role => ({
+          name: `${role.name}`,
+          value: role.id
+        }))
+      }
+    ]).then(function (answers) {
+      db.query('INSERT INTO employees SET ?', {
+        firstName: answers.firstName,
+        lastName: answers.lastName,
+        roleId: answers.roleId,
+        managerId: null
+      }, function (err, res) {
+        if (err) throw err;
+        console.table(res)
+        start()
+      })
+    })
+  })
+}
 
 
 
