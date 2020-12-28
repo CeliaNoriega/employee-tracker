@@ -13,7 +13,7 @@
   * Update employee roles
   * Delete departments, roles, and employees
 
-  [Check out my vid demonstrating how it works!]()
+  [Check out my vid demonstrating how it works!](https://drive.google.com/file/d/1wtE3ep6Y2HDjt49TLneB9nEFPhutTw8d/view)
 
   
 ## Questions?
