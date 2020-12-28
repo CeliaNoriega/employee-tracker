@@ -22,7 +22,6 @@ function start() {
         "Remove a role",
         "Remove an employee",
         "Update employee roles",
-        "View the total utilized budget of a department",
         "Exit"
       ]
     }])
